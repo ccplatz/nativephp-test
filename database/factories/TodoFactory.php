@@ -20,7 +20,7 @@ class TodoFactory extends Factory
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'due_date' => $this->faker->dateTimeBetween('now', '+1 month'),
-            'priority' => $this->faker->randomElement(['low', 'normal', 'high']),
+            'priority' => $this->faker->randomElement(['low', 'medium', 'high']),
             'status' => $this->faker->randomElement(['pending', 'in-progress', 'completed']),
             'created_at' => now(),
             'updated_at' => now(),
