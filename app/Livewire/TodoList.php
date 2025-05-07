@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Todo;
 use Livewire\Component;
 use Livewire\Attributes\Rule;
+use Carbon\Carbon;
 
 class TodoList extends Component
 {
@@ -17,7 +18,7 @@ class TodoList extends Component
     #[Rule('nullable|max:1000')]
     public $description = '';
 
-    #[Rule('nullable|date')]
+    #[Rule('nullable|date_format:Y-m-d\TH:i')]
     public $due_date = '';
 
     #[Rule('nullable|in:pending,in_progress,completed')]
@@ -33,12 +34,20 @@ class TodoList extends Component
     public function mount()
     {
         $this->refreshTodos();
+        $this->setDefaultDueDate();
     }
 
     public function refreshTodos()
     {
         $this->todos = Todo::where('status', '!=', 'completed')->latest()->get();
         $this->completedTodos = Todo::where('status', 'completed')->latest()->limit(5)->get();
+    }
+
+    public function setDefaultDueDate()
+    {
+        if (empty($this->due_date)) {
+            $this->due_date = Carbon::now()->format('Y-m-d\TH:i');
+        }
     }
 
     public function createTodo()
@@ -53,7 +62,8 @@ class TodoList extends Component
             'priority' => $this->priority,
         ]);
 
-        $this->reset(['title', 'description', 'due_date']);
+        $this->reset(['title', 'description']);
+        $this->setDefaultDueDate();
         $this->refreshTodos();
 
         session()->flash('message', 'Todo created successfully!');
@@ -68,7 +78,7 @@ class TodoList extends Component
 
         $this->title = $todo->title;
         $this->description = $todo->description;
-        $this->due_date = $todo->due_date;
+        $this->due_date = $todo->due_date ? Carbon::parse($todo->due_date)->format('Y-m-d\TH:i') : '';
         $this->status = $todo->status;
         $this->priority = $todo->priority;
     }
@@ -97,7 +107,8 @@ class TodoList extends Component
     {
         $this->isEditing = false;
         $this->editingTodoId = null;
-        $this->reset(['title', 'description', 'due_date', 'status', 'priority']);
+        $this->reset(['title', 'description', 'status', 'priority']);
+        $this->setDefaultDueDate();
     }
 
     public function deleteTodo($todoId)

@@ -30,8 +30,8 @@
             </div>
 
             <div class="mb-4">
-                <label for="due_date" class="block text-gray-300 text-sm font-bold mb-2">Due Date</label>
-                <input type="date" wire:model="due_date" id="due_date"
+                <label for="due_date" class="block text-gray-300 text-sm font-bold mb-2">Due Date & Time (UTC)</label>
+                <input type="datetime-local" wire:model="due_date" id="due_date"
                     class="shadow bg-gray-700 appearance-none border border-gray-600 rounded w-full py-2 px-3 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 @error('due_date')
                     <span class="text-red-400 text-xs">{{ $message }}</span>
@@ -150,7 +150,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    {{ \Carbon\Carbon::parse($todo->due_date)->format('M d, Y') }}
+                                    {{ \Carbon\Carbon::parse($todo->due_date)->format('M d, Y g:i A') }}
                                 </span>
                             @endif
 
@@ -220,6 +220,11 @@
                                             d="M5 13l4 4L19 7" />
                                     </svg>
                                     <span class="text-gray-400 line-through">{{ $completedTodo->title }}</span>
+                                    @if ($completedTodo->due_date)
+                                        <span class="ml-2 text-xs text-gray-500">
+                                            {{ \Carbon\Carbon::parse($completedTodo->due_date)->format('M d, g:i A') }}
+                                        </span>
+                                    @endif
                                 </li>
                             @endforeach
                         </ul>
