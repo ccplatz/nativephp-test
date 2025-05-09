@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->timestamp('due_date')->nullable();
             $table->string('status')->default('pending');
             $table->string('priority')->default('normal');
+            $table->timestamp('notified_at')->nullable();
             $table->timestamps();
         });
     }

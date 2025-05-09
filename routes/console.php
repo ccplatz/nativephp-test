@@ -1,8 +1,19 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Models\Todo;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+Schedule::call(function () {
+    $todosToNotify = Todo::where('status', '!=', 'completed')
+        ->where('notified_at', null)
+        ->where('due_date', '<=', now())
+        ->get();
+
+    foreach ($todosToNotify as $todo) {
+        Notification::title('Todo Expired')
+            ->message("“{$todo->title}” was due at {$todo->due_date->toDateTimeString()}")
+            ->show();
+
+        $todo->notified_at = now()->toDateTimeString();
+        $todo->save();
+    }
+})->everyMinute();

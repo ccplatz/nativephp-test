@@ -31,26 +31,26 @@ class TodoList extends Component
     public $isEditing = false;
     public $showCompletedTodos = true;
 
-    public function mount()
+    public function mount(): void
     {
         $this->refreshTodos();
         $this->setDefaultDueDate();
     }
 
-    public function refreshTodos()
+    public function refreshTodos(): void
     {
         $this->todos = Todo::where('status', '!=', 'completed')->latest()->get();
         $this->completedTodos = Todo::where('status', 'completed')->latest()->limit(5)->get();
     }
 
-    public function setDefaultDueDate()
+    public function setDefaultDueDate(): void
     {
         if (empty($this->due_date)) {
             $this->due_date = Carbon::now()->format('Y-m-d\TH:i');
         }
     }
 
-    public function createTodo()
+    public function createTodo(): void
     {
         $this->validate();
 
@@ -69,7 +69,7 @@ class TodoList extends Component
         session()->flash('message', 'Todo created successfully!');
     }
 
-    public function editTodo($todoId)
+    public function editTodo($todoId): void
     {
         $this->isEditing = true;
         $this->editingTodoId = $todoId;
@@ -83,7 +83,7 @@ class TodoList extends Component
         $this->priority = $todo->priority;
     }
 
-    public function updateTodo()
+    public function updateTodo(): void
     {
         $this->validate();
 
@@ -103,7 +103,7 @@ class TodoList extends Component
         session()->flash('message', 'Todo updated successfully!');
     }
 
-    public function cancelEdit()
+    public function cancelEdit(): void
     {
         $this->isEditing = false;
         $this->editingTodoId = null;
@@ -111,7 +111,7 @@ class TodoList extends Component
         $this->setDefaultDueDate();
     }
 
-    public function deleteTodo($todoId)
+    public function deleteTodo($todoId): void
     {
         Todo::find($todoId)->delete();
         $this->refreshTodos();
@@ -119,7 +119,7 @@ class TodoList extends Component
         session()->flash('message', 'Todo deleted successfully!');
     }
 
-    public function toggleStatus($todoId)
+    public function toggleStatus($todoId): void
     {
         $todo = Todo::find($todoId);
 
@@ -134,14 +134,14 @@ class TodoList extends Component
         $this->refreshTodos();
     }
 
-    public function setCompleted($todoId)
+    public function setCompleted($todoId): void
     {
         $todo = Todo::find($todoId);
         $todo->update(['status' => 'completed']);
         $this->refreshTodos();
     }
 
-    public function toggleCompletedTodos()
+    public function toggleCompletedTodos(): void
     {
         $this->showCompletedTodos = !$this->showCompletedTodos;
     }

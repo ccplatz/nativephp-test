@@ -17,4 +17,9 @@ class Todo extends Model
         'status',
         'priority',
     ];
+
+    protected $casts = [
+        'due_date' => 'datetime',
+        'notified_at' => 'datetime',
+    ];
 }
