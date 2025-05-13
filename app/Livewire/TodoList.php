@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Todo;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\Rule;
 use Carbon\Carbon;
+use Native\Laravel\Facades\Window;
 
 class TodoList extends Component
 {
@@ -139,6 +141,16 @@ class TodoList extends Component
         $todo = Todo::find($todoId);
         $todo->update(['status' => 'completed']);
         $this->refreshTodos();
+
+        Window::open('todo-completed')
+            ->route('todo-completed')
+            ->maximized()
+            ->title('Completed Todos')
+            ->hideMenu()
+            ->titleBarHidden()
+            ->hasShadow(false)
+            ->transparent()
+            ->backgroundColor('rgba(0,0,0,0)');
     }
 
     public function toggleCompletedTodos(): void

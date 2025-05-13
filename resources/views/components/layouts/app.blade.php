@@ -16,10 +16,8 @@
     @livewireStyles
 </head>
 
-<body>
-
-    @yield('content')
-
+<body class="">
+    {{ $slot }}
     @livewireScripts
 </body>
 
